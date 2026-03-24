@@ -4,773 +4,223 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Julia & the Wonderers — Nomadic Family Life</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Nunito:wght@300;400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sand: #f5ede0;
-    --sand-dark: #e8d8c0;
-    --sand-deeper: #d4bc9a;
-    --ink: #2c1f0e;
-    --ink-light: #5a3e28;
-    --rust: #b85c38;
-    --rust-light: #d4784f;
-    --sage: #7a8c6e;
-    --cream: #fdf8f0;
-    --paper: #faf4e8;
-    --shadow: rgba(44,31,14,0.12);
-    --shadow-deep: rgba(44,31,14,0.22);
+    --teal:        #2a9d8f;
+    --teal-dark:   #1f7a6e;
+    --teal-light:  #52b8ac;
+    --teal-pale:   #e0f5f3;
+    --teal-mist:   #f0faf9;
+    --mint:        #a8e6df;
+    --green-deep:  #1a5c52;
+    --white:       #ffffff;
+    --cream:       #f8fefd;
+    --ink:         #1a2e2b;
+    --ink-light:   #3d6b63;
+    --shadow:      rgba(42,157,143,0.15);
+    --shadow-deep: rgba(26,92,82,0.2);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Nunito',sans-serif; background:var(--cream); color:var(--ink); overflow-x:hidden; }
+
+  /* PLANES */
+  .planes-bg { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .plane { position:absolute; font-size:1.4rem; opacity:0.1; animation:flyPlane linear infinite; color:var(--teal); }
+  .plane:nth-child(1){ top:8%;  animation-duration:22s; animation-delay:0s;   font-size:1.8rem; }
+  .plane:nth-child(2){ top:22%; animation-duration:30s; animation-delay:-8s;  font-size:1.1rem; opacity:0.07; }
+  .plane:nth-child(3){ top:38%; animation-duration:18s; animation-delay:-3s;  font-size:2rem;   opacity:0.06; }
+  .plane:nth-child(4){ top:55%; animation-duration:25s; animation-delay:-12s; font-size:1.3rem; }
+  .plane:nth-child(5){ top:70%; animation-duration:35s; animation-delay:-5s;  font-size:0.9rem; opacity:0.08; }
+  .plane:nth-child(6){ top:85%; animation-duration:20s; animation-delay:-18s; font-size:1.6rem; opacity:0.05; }
+  .plane:nth-child(7){ top:15%; animation-duration:28s; animation-delay:-22s; font-size:1rem;   opacity:0.09; }
+  .plane:nth-child(8){ top:48%; animation-duration:16s; animation-delay:-7s;  font-size:2.2rem; opacity:0.04; }
+  @keyframes flyPlane {
+    from { left:-5%;  transform:rotate(-5deg); }
+    to   { left:110%; transform:rotate(-5deg); }
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--sand);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.7;
-    background-image:
-      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c4a882' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  /* ── NAV ── */
+  /* NAV */
   nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(245,237,224,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--sand-dark);
-    padding: 0 5vw;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(240,250,249,0.94); backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(42,157,143,0.15);
+    padding:0 5vw; height:64px;
+    display:flex; align-items:center; justify-content:space-between;
   }
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    font-style: italic;
-    color: var(--ink);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-  }
-  .nav-logo span { color: var(--rust); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--ink-light);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--rust); }
-  .nav-cta {
-    background: var(--rust);
-    color: white !important;
-    padding: 0.45rem 1.1rem;
-    border-radius: 2px;
-    transition: background 0.2s !important;
-  }
-  .nav-cta:hover { background: var(--ink) !important; color: white !important; }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-  .hamburger span { display: block; width: 24px; height: 2px; background: var(--ink); border-radius: 2px; transition: 0.3s; }
+  .nav-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:1.25rem; color:var(--ink); text-decoration:none; transition:color .2s; }
+  .nav-logo span { color:var(--teal); }
+  .nav-logo:hover { color:var(--teal); }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a { font-size:.85rem; font-weight:700; color:var(--ink-light); text-decoration:none; letter-spacing:.06em; text-transform:uppercase; transition:color .2s; position:relative; }
+  .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; right:0; height:2px; background:var(--teal); border-radius:1px; transform:scaleX(0); transition:transform .2s; }
+  .nav-links a:hover { color:var(--teal); }
+  .nav-links a:hover::after { transform:scaleX(1); }
+  .nav-cta { background:var(--teal)!important; color:white!important; padding:.5rem 1.2rem; border-radius:30px; box-shadow:0 4px 12px var(--shadow); transition:all .2s!important; }
+  .nav-cta::after { display:none!important; }
+  .nav-cta:hover { background:var(--teal-dark)!important; transform:translateY(-1px); }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .hamburger span { display:block; width:24px; height:2px; background:var(--ink); border-radius:2px; transition:.3s; }
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; align-items: center;
-    padding: 80px 5vw 60px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '✈';
-    position: absolute;
-    font-size: 22rem;
-    color: rgba(184,92,56,0.06);
-    right: -4rem;
-    top: 50%;
-    transform: translateY(-50%) rotate(-15deg);
-    pointer-events: none;
-  }
-  .hero-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: center;
-    width: 100%;
-  }
-  .hero-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--rust);
-    margin-bottom: 1.2rem;
-    display: flex; align-items: center; gap: 0.6rem;
-  }
-  .hero-eyebrow::before { content: ''; display: block; width: 30px; height: 1px; background: var(--rust); }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
-    line-height: 1.12;
-    color: var(--ink);
-    margin-bottom: 1.5rem;
-  }
-  .hero h1 em { font-style: italic; color: var(--rust); }
-  .hero-desc {
-    font-family: 'Lora', serif;
-    font-size: 1.05rem;
-    color: var(--ink-light);
-    margin-bottom: 2.5rem;
-    max-width: 440px;
-  }
-  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .btn-primary {
-    background: var(--rust);
-    color: white;
-    padding: 0.85rem 2rem;
-    border-radius: 2px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    transition: all 0.25s;
-    display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-primary:hover { background: var(--ink); transform: translateY(-1px); }
-  .btn-secondary {
-    color: var(--ink);
-    padding: 0.85rem 2rem;
-    border: 1px solid var(--sand-deeper);
-    border-radius: 2px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    transition: all 0.25s;
-    background: transparent;
-  }
-  .btn-secondary:hover { background: var(--sand-dark); }
+  /* HERO */
+  .hero { min-height:100vh; display:flex; align-items:center; padding:100px 5vw 60px; position:relative; z-index:1; }
+  .hero-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; width:100%; }
+  .hero-eyebrow { display:inline-flex; align-items:center; gap:.6rem; background:var(--teal-pale); color:var(--teal-dark); font-size:.78rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:.4rem 1rem; border-radius:30px; margin-bottom:1.4rem; animation:fadeUp .6s ease both .1s; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2.6rem,5vw,4rem); line-height:1.1; color:var(--ink); margin-bottom:1.4rem; animation:fadeUp .6s ease both .2s; }
+  .hero h1 em { font-style:italic; color:var(--teal); }
+  .hero-desc { font-family:'Lora',serif; font-size:1.05rem; color:var(--ink-light); margin-bottom:2.5rem; max-width:460px; line-height:1.8; animation:fadeUp .6s ease both .3s; }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; animation:fadeUp .6s ease both .4s; }
 
-  /* ── OPEN BOOK WIDGET ── */
-  .hero-book {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .btn-primary { background:var(--teal); color:white; padding:.9rem 2rem; border-radius:30px; text-decoration:none; font-size:.9rem; font-weight:700; box-shadow:0 6px 20px var(--shadow); transition:all .25s; display:inline-flex; align-items:center; gap:.5rem; }
+  .btn-primary:hover { background:var(--teal-dark); transform:translateY(-2px); box-shadow:0 10px 28px var(--shadow-deep); }
+  .btn-secondary { color:var(--teal-dark); padding:.9rem 2rem; border:2px solid var(--teal-light); border-radius:30px; text-decoration:none; font-size:.9rem; font-weight:700; transition:all .25s; }
+  .btn-secondary:hover { background:var(--teal-pale); transform:translateY(-2px); }
+
+  /* HERO CARD */
+  .hero-visual { display:flex; justify-content:center; }
+  .safety-card-preview { background:white; border-radius:16px; overflow:hidden; box-shadow:0 20px 60px var(--shadow-deep); width:300px; transform:rotate(-1deg); transition:transform .4s,box-shadow .4s; animation:fadeUp .8s ease both .4s; }
+  .safety-card-preview:hover { transform:rotate(0deg) scale(1.03); box-shadow:0 30px 80px var(--shadow-deep); }
+  .card-header { background:var(--teal); color:white; text-align:center; padding:1rem; font-weight:800; font-size:.85rem; letter-spacing:.1em; text-transform:uppercase; }
+  .card-body { padding:1.2rem; }
+  .card-field { display:flex; align-items:center; padding:.55rem 0; border-bottom:1px solid var(--teal-pale); font-size:.82rem; color:var(--ink-light); gap:.6rem; font-weight:600; }
+  .card-field:last-child { border-bottom:none; }
+  .field-line { flex:1; height:1px; background:var(--mint); border-radius:1px; }
+  .card-footer-box { background:var(--teal-pale); margin:.8rem; border-radius:10px; padding:.8rem; text-align:center; font-size:.76rem; color:var(--teal-dark); font-weight:600; }
+  .card-bottom { background:var(--teal-dark); color:white; text-align:center; padding:.6rem; font-size:.72rem; font-style:italic; font-family:'Playfair Display',serif; }
+  .float-badge { position:absolute; top:-16px; right:-16px; background:var(--teal); color:white; border-radius:50%; width:64px; height:64px; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:.6rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase; box-shadow:0 4px 16px var(--shadow-deep); animation:spin-slow 8s linear infinite; text-align:center; line-height:1.3; }
+  @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  .float-badge-inner { animation:spin-slow 8s linear infinite reverse; }
+
+  /* SECTIONS */
+  section { padding:90px 5vw; position:relative; z-index:1; }
+  .section-inner { max-width:1100px; margin:0 auto; }
+  .section-eyebrow { display:inline-flex; align-items:center; gap:.5rem; background:var(--teal-pale); color:var(--teal-dark); font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:.35rem .9rem; border-radius:30px; margin-bottom:1rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3.5vw,2.8rem); line-height:1.18; color:var(--ink); margin-bottom:1rem; }
+  .section-sub { font-family:'Lora',serif; font-size:1rem; color:var(--ink-light); max-width:540px; line-height:1.75; }
+
+  /* ABOUT */
+  #about { background:white; }
+  .about-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:5rem; align-items:center; margin-top:3rem; }
+  .journal-card { background:var(--teal-mist); border:2px solid var(--mint); border-radius:16px; padding:2.5rem; position:relative; transition:transform .3s,box-shadow .3s; }
+  .journal-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px var(--shadow); }
+  .journal-card::before { content:'"'; font-family:'Playfair Display',serif; font-size:6rem; line-height:1; color:var(--mint); position:absolute; top:.5rem; left:1.5rem; pointer-events:none; }
+  .journal-card p { font-family:'Lora',serif; font-style:italic; font-size:.98rem; color:var(--ink-light); line-height:1.85; padding-top:2rem; }
+  .journal-sig { margin-top:1.2rem; font-family:'Playfair Display',serif; font-style:italic; font-size:1.15rem; color:var(--teal); }
+  .about-text p { font-family:'Lora',serif; color:var(--ink-light); margin-bottom:1rem; font-size:1rem; line-height:1.85; }
+  .about-tags { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.5rem; }
+  .tag { background:var(--teal-pale); color:var(--teal-dark); padding:.4rem 1rem; border-radius:30px; font-size:.78rem; font-weight:700; transition:all .2s; cursor:default; }
+  .tag:hover { background:var(--teal); color:white; transform:scale(1.05); }
+
+  /* PRINTABLES */
+  #printables { background:var(--cream); }
+  .printables-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3rem; flex-wrap:wrap; gap:1.5rem; }
+  .printables-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:2rem; }
+  .printable-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px var(--shadow); transition:all .3s; cursor:pointer; }
+  .printable-card:hover { transform:translateY(-6px) scale(1.01); box-shadow:0 16px 40px var(--shadow-deep); }
+  .printable-thumb { background:linear-gradient(135deg,var(--teal) 0%,var(--teal-light) 60%,var(--mint) 100%); height:190px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .printable-thumb::before { content:'✈ ✈ ✈'; position:absolute; bottom:1rem; right:1rem; font-size:.8rem; color:rgba(255,255,255,.3); letter-spacing:.5rem; }
+  .thumb-card { background:white; width:120px; height:150px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.2); padding:14px; display:flex; flex-direction:column; gap:7px; transform:rotate(-2deg); transition:transform .3s; }
+  .printable-card:hover .thumb-card { transform:rotate(0deg) scale(1.05); }
+  .tline { height:3px; background:var(--mint); border-radius:2px; }
+  .tline.dark { background:var(--teal); }
+  .tline.short { width:65%; }
+  .printable-info { padding:1.5rem; }
+  .p-badge { display:inline-block; background:var(--teal-pale); color:var(--teal-dark); font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.2rem .7rem; border-radius:30px; margin-bottom:.8rem; }
+  .p-badge.new { background:var(--teal); color:white; }
+  .printable-info h3 { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--ink); margin-bottom:.5rem; line-height:1.3; }
+  .printable-info p { font-size:.85rem; color:var(--ink-light); line-height:1.65; margin-bottom:1.2rem; }
+  .p-cta { display:inline-flex; align-items:center; gap:.4rem; font-size:.82rem; font-weight:700; color:var(--teal); text-decoration:none; transition:gap .2s; }
+  .p-cta:hover { gap:.8rem; }
+  .freebie-strip { margin-top:3rem; background:linear-gradient(135deg,var(--teal-dark),var(--teal)); border-radius:20px; padding:3rem; display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; position:relative; overflow:hidden; }
+  .freebie-strip::after { content:'✈'; position:absolute; right:6rem; font-size:7rem; color:rgba(255,255,255,.06); top:50%; transform:translateY(-50%) rotate(-15deg); }
+  .freebie-strip h3 { font-family:'Playfair Display',serif; font-size:1.7rem; font-style:italic; color:white; margin-bottom:.4rem; }
+  .freebie-strip p { color:rgba(255,255,255,.7); font-family:'Lora',serif; font-size:.92rem; }
+  .btn-white { background:white; color:var(--teal-dark); padding:.9rem 2rem; border-radius:30px; text-decoration:none; font-size:.9rem; font-weight:700; white-space:nowrap; transition:all .2s; box-shadow:0 4px 16px rgba(0,0,0,.1); }
+  .btn-white:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.15); }
+
+  /* BLOG */
+  #blog { background:white; }
+  .blog-book-wrap { margin-top:3rem; }
+  .blog-book { background:var(--cream); border-radius:4px 20px 20px 4px; box-shadow:-8px 0 0 var(--teal-pale),-16px 0 0 var(--mint),0 20px 60px var(--shadow-deep); overflow:hidden; position:relative; border:1px solid rgba(42,157,143,.1); }
+  .blog-book::before { content:''; position:absolute; left:0; top:0; bottom:0; width:48px; background:linear-gradient(to right,var(--teal-pale),transparent); z-index:2; pointer-events:none; }
+  .book-pages-wrap { overflow:hidden; }
+  .book-pages { display:flex; transition:transform .6s cubic-bezier(.4,0,.2,1); }
+  .book-page { min-width:100%; padding:3rem 3rem 3rem 5rem; display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; }
+  .b-tag { display:inline-block; background:var(--teal-pale); color:var(--teal-dark); font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:.2rem .6rem; border-radius:30px; margin-bottom:.5rem; }
+  .b-date { font-size:.72rem; color:var(--ink-light); opacity:.6; margin-bottom:.6rem; font-weight:600; }
+  .b-title { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--ink); margin-bottom:.7rem; line-height:1.35; transition:color .2s; cursor:default; }
+  .b-title:hover { color:var(--teal); }
+  .b-excerpt { font-family:'Lora',serif; font-size:.86rem; color:var(--ink-light); line-height:1.78; margin-bottom:.9rem; }
+  .b-read { font-size:.78rem; font-weight:700; color:var(--teal); text-decoration:none; display:inline-flex; align-items:center; gap:.35rem; transition:gap .2s; }
+  .b-read:hover { gap:.65rem; }
+  .b-divider { height:1px; background:var(--teal-pale); margin:1.5rem 0; }
+  .book-nav { display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-top:2rem; }
+  .turn-btn { width:48px; height:48px; border-radius:50%; border:2px solid var(--teal-light); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:var(--teal); box-shadow:0 4px 12px var(--shadow); transition:all .2s; }
+  .turn-btn:hover { background:var(--teal); color:white; border-color:var(--teal); transform:scale(1.08); }
+  .turn-btn:disabled { opacity:.3; cursor:not-allowed; }
+  .turn-btn:disabled:hover { background:white; color:var(--teal); transform:none; }
+  .page-ind { font-family:'Lora',serif; font-style:italic; font-size:.85rem; color:var(--ink-light); }
+
+  /* NEWSLETTER */
+  #newsletter { background:var(--teal-mist); }
+  .nl-inner { max-width:580px; margin:0 auto; text-align:center; }
+  .nl-card { background:white; border:1px solid var(--mint); border-radius:20px; padding:3rem; box-shadow:0 8px 40px var(--shadow); margin-top:2rem; position:relative; overflow:hidden; transition:transform .3s,box-shadow .3s; }
+  .nl-card:hover { transform:translateY(-4px); box-shadow:0 16px 50px var(--shadow-deep); }
+  .nl-card::before { content:'✈ ✈'; position:absolute; top:1rem; right:1.5rem; font-size:.85rem; color:var(--mint); letter-spacing:.8rem; }
+  .kit-placeholder { background:var(--teal-pale); border:2px dashed var(--teal-light); border-radius:12px; padding:2rem; margin-top:1.5rem; color:var(--ink-light); font-family:'Lora',serif; font-style:italic; font-size:.9rem; line-height:1.7; }
+
+  /* FOOTER */
+  footer { background:var(--green-deep); color:rgba(255,255,255,.6); padding:3rem 5vw; text-align:center; }
+  .footer-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:1.4rem; color:white; margin-bottom:.5rem; }
+  .footer-logo span { color:var(--mint); }
+  .footer-links { display:flex; justify-content:center; gap:2rem; list-style:none; margin:1.2rem 0; flex-wrap:wrap; }
+  .footer-links a { color:rgba(255,255,255,.5); text-decoration:none; font-size:.82rem; font-weight:600; letter-spacing:.04em; transition:color .2s; }
+  .footer-links a:hover { color:var(--mint); }
+  .footer-copy { font-size:.78rem; }
+
+  /* MOBILE MENU */
+  .mobile-menu { display:none; position:fixed; top:64px; left:0; right:0; background:rgba(240,250,249,.97); backdrop-filter:blur(12px); z-index:99; padding:1.5rem 5vw 2rem; border-bottom:1px solid var(--mint); flex-direction:column; gap:1rem; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-size:1rem; color:var(--ink); text-decoration:none; font-weight:700; padding:.6rem 0; border-bottom:1px solid var(--teal-pale); }
+
+  @media(max-width:900px){
+    .hero-inner{grid-template-columns:1fr;gap:3rem;}
+    .hero-visual{display:none;}
+    .about-grid{grid-template-columns:1fr;gap:2.5rem;}
+    .book-page{grid-template-columns:1fr;padding:2rem 1.5rem 2rem 2.5rem;}
+    .freebie-strip{grid-template-columns:1fr;text-align:center;}
+    .nav-links{display:none;}
+    .hamburger{display:flex;}
   }
-  .book-wrap {
-    width: 100%;
-    max-width: 420px;
-    perspective: 1200px;
-  }
-  .book {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--cream);
-    border-radius: 2px 8px 8px 2px;
-    box-shadow:
-      -6px 0 20px rgba(0,0,0,0.08),
-      0 10px 40px var(--shadow-deep),
-      inset 0 0 0 1px rgba(255,255,255,0.5);
-    transform: rotateY(-4deg);
-    transition: transform 0.5s ease;
-    position: relative;
-  }
-  .book:hover { transform: rotateY(0deg); }
-  .book::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 0; bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, transparent, var(--sand-deeper), transparent);
-    transform: translateX(-50%);
-    z-index: 2;
-  }
-  .book-page {
-    padding: 2rem 1.5rem;
-    background: var(--paper);
-    min-height: 280px;
-    position: relative;
-  }
-  .book-page:first-child {
-    border-radius: 2px 0 0 2px;
-    background: linear-gradient(to right, var(--sand-dark), var(--paper));
-    border-right: 1px solid var(--sand-deeper);
-  }
-  .book-page:last-child { border-radius: 0 8px 8px 0; }
-  .page-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--sand-deeper);
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-  .page-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.95rem;
-    color: var(--ink);
-    margin-bottom: 0.8rem;
-    line-height: 1.3;
-  }
-  .page-lines { display: flex; flex-direction: column; gap: 0.45rem; }
-  .page-line {
-    height: 1px;
-    background: var(--sand-deeper);
-    opacity: 0.5;
-    border-radius: 1px;
-  }
-  .page-line:nth-child(odd) { opacity: 0.3; width: 85%; }
-  .page-stamp {
-    position: absolute;
-    bottom: 1.5rem; right: 1.5rem;
-    font-size: 1.8rem;
-    opacity: 0.18;
-  }
-  .page-checklist { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
-  .check-item {
-    display: flex; align-items: flex-start; gap: 0.5rem;
-    font-size: 0.72rem;
-    color: var(--ink-light);
-    font-family: 'Lora', serif;
-  }
-  .check-box {
-    width: 11px; height: 11px;
-    border: 1.5px solid var(--rust);
-    border-radius: 1px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    position: relative;
-  }
-  .check-box.checked::after {
-    content: '✓';
-    position: absolute;
-    top: -3px; left: 0;
-    font-size: 10px;
-    color: var(--rust);
+  @media(max-width:600px){
+    section{padding:60px 5vw;}
+    .nl-card{padding:2rem 1.5rem;}
   }
 
-  /* ── SECTION STYLES ── */
-  section { padding: 80px 5vw; }
-  .section-inner { max-width: 1100px; margin: 0 auto; }
-  .section-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--rust);
-    margin-bottom: 0.8rem;
-    font-weight: 500;
-    display: flex; align-items: center; gap: 0.6rem;
-  }
-  .section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--rust); }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-    line-height: 1.18;
-    color: var(--ink);
-    margin-bottom: 1rem;
-  }
-  .section-subtitle {
-    font-family: 'Lora', serif;
-    font-size: 1rem;
-    color: var(--ink-light);
-    max-width: 560px;
-  }
-
-  /* ── ABOUT ── */
-  #about { background: var(--cream); }
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 5rem;
-    align-items: center;
-    margin-top: 3rem;
-  }
-  .about-journal {
-    background: var(--paper);
-    border-radius: 4px;
-    padding: 2.5rem 2rem;
-    box-shadow: 4px 4px 0 var(--sand-deeper), 0 8px 30px var(--shadow);
-    position: relative;
-    border: 1px solid var(--sand-dark);
-  }
-  .about-journal::before {
-    content: '';
-    position: absolute;
-    left: 2rem; right: 2rem;
-    top: 0;
-    height: 3px;
-    background: linear-gradient(to right, var(--rust), var(--rust-light), transparent);
-    border-radius: 0 0 2px 2px;
-  }
-  .journal-date {
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--sand-deeper);
-    margin-bottom: 1.2rem;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .journal-text {
-    font-family: 'Lora', serif;
-    font-size: 0.98rem;
-    color: var(--ink-light);
-    line-height: 1.8;
-  }
-  .journal-sig {
-    margin-top: 1.5rem;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 1.1rem;
-    color: var(--rust);
-  }
-  .about-content h2 { margin-bottom: 1.2rem; }
-  .about-content p {
-    font-family: 'Lora', serif;
-    color: var(--ink-light);
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    line-height: 1.8;
-  }
-  .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
-  .tag {
-    background: var(--sand-dark);
-    color: var(--ink-light);
-    padding: 0.3rem 0.8rem;
-    border-radius: 2px;
-    font-size: 0.78rem;
-    letter-spacing: 0.04em;
-  }
-
-  /* ── PRINTABLES ── */
-  #printables { background: var(--sand); }
-  .printables-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 3rem;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-  .printables-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-  .printable-card {
-    background: var(--paper);
-    border: 1px solid var(--sand-dark);
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 3px 3px 0 var(--sand-deeper);
-    transition: all 0.25s;
-    cursor: pointer;
-  }
-  .printable-card:hover {
-    transform: translateY(-3px) translateX(-1px);
-    box-shadow: 5px 5px 0 var(--sand-deeper), 0 12px 30px var(--shadow);
-  }
-  .printable-preview {
-    background: linear-gradient(135deg, #f9c4af 0%, #f5a58a 40%, #e8836a 100%);
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .printable-preview-inner {
-    background: white;
-    width: 130px;
-    height: 160px;
-    border-radius: 2px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transform: rotate(-2deg);
-  }
-  .preview-line { height: 2px; background: #f9c4af; border-radius: 1px; }
-  .preview-line.dark { background: #d4784f; }
-  .preview-line.short { width: 60%; }
-  .preview-plane { font-size: 1.4rem; position: absolute; opacity: 0.4; }
-  .preview-plane:nth-child(2) { top: 15px; right: 20px; transform: rotate(20deg); }
-  .preview-plane:nth-child(3) { bottom: 20px; left: 15px; transform: rotate(-10deg); font-size: 0.9rem; }
-  .printable-info { padding: 1.5rem; }
-  .printable-badge {
-    display: inline-block;
-    background: var(--sage);
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    border-radius: 1px;
-    margin-bottom: 0.8rem;
-  }
-  .printable-badge.new { background: var(--rust); }
-  .printable-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-  }
-  .printable-desc {
-    font-size: 0.85rem;
-    color: var(--ink-light);
-    line-height: 1.6;
-    margin-bottom: 1.2rem;
-  }
-  .printable-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--rust);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: gap 0.2s;
-  }
-  .printable-cta:hover { gap: 0.7rem; }
-
-  /* ── FREEBIE BANNER ── */
-  .freebie-banner {
-    background: var(--ink);
-    color: white;
-    border-radius: 4px;
-    padding: 3rem;
-    margin-top: 3rem;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 2rem;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .freebie-banner::before {
-    content: '✂';
-    position: absolute;
-    right: 5rem;
-    font-size: 8rem;
-    opacity: 0.06;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  .freebie-banner h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    margin-bottom: 0.5rem;
-    font-style: italic;
-  }
-  .freebie-banner p {
-    color: rgba(255,255,255,0.65);
-    font-size: 0.9rem;
-    font-family: 'Lora', serif;
-  }
-  .btn-light {
-    background: white;
-    color: var(--ink);
-    padding: 0.85rem 1.8rem;
-    border-radius: 2px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    white-space: nowrap;
-    transition: all 0.2s;
-    display: inline-block;
-  }
-  .btn-light:hover { background: var(--sand); }
-
-  /* ── BLOG ── */
-  #blog { background: var(--cream); }
-  .blog-book-container {
-    margin-top: 3rem;
-    position: relative;
-  }
-  .blog-book {
-    background: var(--paper);
-    border-radius: 4px 12px 12px 4px;
-    box-shadow: -4px 0 0 var(--sand-deeper), 0 12px 50px var(--shadow-deep);
-    overflow: hidden;
-    position: relative;
-    min-height: 420px;
-    border: 1px solid var(--sand-dark);
-  }
-  .blog-book::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 40px;
-    background: linear-gradient(to right, var(--sand-dark), transparent);
-    z-index: 1;
-  }
-  .blog-book::after {
-    content: '';
-    position: absolute;
-    left: 40px; top: 0; bottom: 0;
-    width: 1px;
-    background: var(--sand-deeper);
-    z-index: 1;
-    opacity: 0.6;
-  }
-  .blog-pages-wrapper { overflow: hidden; }
-  .blog-pages {
-    display: flex;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .blog-page {
-    min-width: 100%;
-    padding: 3rem 3rem 2rem 5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: start;
-  }
-  .blog-page-number {
-    position: absolute;
-    bottom: 1.5rem;
-    font-size: 0.72rem;
-    color: var(--sand-deeper);
-    letter-spacing: 0.1em;
-  }
-  .blog-page-number.left { left: 5rem; }
-  .blog-page-number.right { right: 3rem; }
-  .blog-article { padding: 0; }
-  .article-date {
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--sand-deeper);
-    margin-bottom: 0.7rem;
-    font-weight: 500;
-  }
-  .article-tag {
-    display: inline-block;
-    background: rgba(184,92,56,0.1);
-    color: var(--rust);
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border-radius: 1px;
-    margin-bottom: 0.7rem;
-  }
-  .article-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
-    color: var(--ink);
-    margin-bottom: 0.8rem;
-    line-height: 1.3;
-  }
-  .article-excerpt {
-    font-family: 'Lora', serif;
-    font-size: 0.88rem;
-    color: var(--ink-light);
-    line-height: 1.75;
-    margin-bottom: 1rem;
-  }
-  .article-read {
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--rust);
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    transition: gap 0.2s;
-  }
-  .article-read:hover { gap: 0.6rem; }
-  .article-divider {
-    height: 1px;
-    background: var(--sand-dark);
-    margin: 1.5rem 0;
-  }
-
-  /* Blog navigation */
-  .blog-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-  .page-turn-btn {
-    width: 44px; height: 44px;
-    border: 1.5px solid var(--sand-deeper);
-    background: var(--paper);
-    border-radius: 2px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-    color: var(--ink);
-    transition: all 0.2s;
-    box-shadow: 2px 2px 0 var(--sand-deeper);
-  }
-  .page-turn-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
-  .page-turn-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .page-turn-btn:disabled:hover { background: var(--paper); color: var(--ink); border-color: var(--sand-deeper); }
-  .page-indicator {
-    font-size: 0.78rem;
-    color: var(--ink-light);
-    letter-spacing: 0.06em;
-    font-family: 'Lora', serif;
-    font-style: italic;
-  }
-
-  /* ── NEWSLETTER ── */
-  #newsletter {
-    background: var(--sand);
-    text-align: center;
-  }
-  .newsletter-inner {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .newsletter-card {
-    background: var(--paper);
-    border: 1px solid var(--sand-dark);
-    border-radius: 4px;
-    padding: 3.5rem;
-    box-shadow: 5px 5px 0 var(--sand-deeper);
-    margin-top: 2rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .newsletter-card::before {
-    content: '✈ ✈ ✈';
-    position: absolute;
-    top: 1rem; right: 1.5rem;
-    font-size: 0.8rem;
-    color: var(--rust);
-    opacity: 0.4;
-    letter-spacing: 0.5rem;
-  }
-  .kit-form-placeholder {
-    background: var(--sand-dark);
-    border: 2px dashed var(--sand-deeper);
-    border-radius: 2px;
-    padding: 2rem;
-    margin-top: 1.5rem;
-    color: var(--ink-light);
-    font-family: 'Lora', serif;
-    font-style: italic;
-    font-size: 0.9rem;
-  }
-  /* Replace the above with your actual Kit.com embed */
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--ink);
-    color: rgba(255,255,255,0.6);
-    padding: 3rem 5vw;
-    text-align: center;
-  }
-  .footer-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    font-style: italic;
-    color: white;
-    margin-bottom: 0.8rem;
-  }
-  .footer-logo span { color: var(--rust-light); }
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    list-style: none;
-    margin: 1.2rem 0;
-    flex-wrap: wrap;
-  }
-  .footer-links a {
-    color: rgba(255,255,255,0.5);
-    text-decoration: none;
-    font-size: 0.82rem;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--rust-light); }
-  .footer-copy { font-size: 0.78rem; margin-top: 0.5rem; }
-
-  /* ── MOBILE NAV ── */
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 64px; left: 0; right: 0;
-    background: rgba(245,237,224,0.97);
-    backdrop-filter: blur(12px);
-    z-index: 99;
-    padding: 1.5rem 5vw 2rem;
-    border-bottom: 1px solid var(--sand-dark);
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    font-size: 1rem;
-    color: var(--ink);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--sand-dark);
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .hero-book { display: none; }
-    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .blog-page { grid-template-columns: 1fr; }
-    .freebie-banner { grid-template-columns: 1fr; text-align: center; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    .printables-header { flex-direction: column; align-items: flex-start; }
-  }
-  @media (max-width: 600px) {
-    section { padding: 60px 5vw; }
-    .blog-page { padding: 2rem 1.5rem 2rem 2.5rem; }
-    .newsletter-card { padding: 2rem 1.5rem; }
-    .freebie-banner { padding: 2rem; }
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .hero-text > * {
-    animation: fadeUp 0.7s ease both;
-  }
-  .hero-text > *:nth-child(1) { animation-delay: 0.1s; }
-  .hero-text > *:nth-child(2) { animation-delay: 0.2s; }
-  .hero-text > *:nth-child(3) { animation-delay: 0.3s; }
-  .hero-text > *:nth-child(4) { animation-delay: 0.4s; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease,transform .7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<div class="planes-bg" aria-hidden="true">
+  <div class="plane">✈</div><div class="plane">✈</div><div class="plane">✈</div>
+  <div class="plane">✈</div><div class="plane">✈</div><div class="plane">✈</div>
+  <div class="plane">✈</div><div class="plane">✈</div>
+</div>
+
 <nav>
   <a href="#" class="nav-logo">julia & the <span>wonderers</span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#printables">Printables</a></li>
     <li><a href="#blog">Blog</a></li>
-    <li><a href="#newsletter" class="nav-cta">Free Printable →</a></li>
+    <li><a href="#newsletter" class="nav-cta">Free Printable ✈</a></li>
   </ul>
-  <div class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
 </nav>
-
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" onclick="toggleMenu()">About</a>
   <a href="#printables" onclick="toggleMenu()">Free Printables</a>
@@ -778,75 +228,55 @@
   <a href="#newsletter" onclick="toggleMenu()">Get Free Printable →</a>
 </div>
 
-<!-- ── HERO ── -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-eyebrow">Nomadic family life</div>
+    <div>
+      <div class="hero-eyebrow">✈ Nomadic family life</div>
       <h1>Travel <em>safer</em>,<br>wander <em>further</em></h1>
-      <p class="hero-desc">Free tips, printables & real stories for nomadic families who know the world is the best classroom.</p>
+      <p class="hero-desc">Free tips, printables & real stories for families who know the world is the best classroom — shared by a nomadic mom of two.</p>
       <div class="hero-btns">
         <a href="#newsletter" class="btn-primary">✂ Get the free printable</a>
-        <a href="#blog" class="btn-secondary">Read the blog →</a>
+        <a href="#blog" class="btn-secondary">Read our stories →</a>
       </div>
     </div>
-    <div class="hero-book">
-      <div class="book-wrap">
-        <div class="book">
-          <div class="book-page">
-            <div class="page-label">Safety Card</div>
-            <div class="page-title">Child Travel<br>ID Card</div>
-            <div class="page-checklist">
-              <div class="check-item"><div class="check-box checked"></div>Child's name & photo</div>
-              <div class="check-item"><div class="check-box checked"></div>Mom & Dad's number</div>
-              <div class="check-item"><div class="check-box checked"></div>Blood type / Allergies</div>
-              <div class="check-item"><div class="check-box"></div>Gate number (fill at airport)</div>
-              <div class="check-item"><div class="check-box"></div>AirTag in shoe ✓</div>
-            </div>
-            <div class="page-stamp">✈</div>
+    <div class="hero-visual">
+      <div style="position:relative;display:inline-block;">
+        <div class="float-badge"><div class="float-badge-inner">FREE<br>✈<br>100%</div></div>
+        <div class="safety-card-preview">
+          <div class="card-header">✈ Child Safety Card · Biztonsági Kártya</div>
+          <div class="card-body">
+            <div class="card-field">👶 Child's name: <div class="field-line"></div></div>
+            <div class="card-field">📱 Mom's phone: <div class="field-line"></div></div>
+            <div class="card-field">📱 Dad's phone: <div class="field-line"></div></div>
+            <div class="card-field">🌿 Allergies: <div class="field-line"></div></div>
+            <div class="card-field">🛫 Gate no.: <div class="field-line"></div></div>
           </div>
-          <div class="book-page">
-            <div class="page-label">Checklist</div>
-            <div class="page-title">Before You<br>Leave Home</div>
-            <div class="page-lines">
-              <div class="page-line dark"></div>
-              <div class="page-line"></div>
-              <div class="page-line short"></div>
-              <div class="page-line dark"></div>
-              <div class="page-line"></div>
-              <div class="page-line short"></div>
-              <div class="page-line"></div>
-              <div class="page-line dark"></div>
-              <div class="page-line short"></div>
-            </div>
-            <div class="page-stamp">📋</div>
-          </div>
+          <div class="card-footer-box">✂ Print · Fill in · Cut out<br>Tuck inside shirt or pocket</div>
+          <div class="card-bottom">julia & the wonderers</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── ABOUT ── -->
+<!-- ABOUT -->
 <section id="about">
   <div class="section-inner">
     <div class="about-grid">
-      <div class="about-journal">
-        <div class="journal-date">March 2025 — Somewhere over Europe</div>
-        <div class="journal-text">
-          "Two kids, two backpacks, and a one-way ticket. People thought we were crazy. Maybe we are. But somewhere between the third airport in a week and our youngest pointing at the Adriatic Sea saying <em>'Mama, our bathtub!'</em> — I knew we'd never go back to the 9-to-5."
-        </div>
-        <div class="journal-sig">— Julia</div>
+      <div class="journal-card reveal">
+        <p>"Two kids, two backpacks, one-way ticket. People thought we were crazy. Maybe we are — but somewhere between the third airport in a week and our youngest pointing at the Adriatic saying <em>'Mama, our bathtub!'</em> — I knew we'd never go back."</p>
+        <div class="journal-sig">— Julia ✈</div>
       </div>
-      <div class="about-content">
-        <div class="section-label">About</div>
+      <div class="reveal">
+        <div class="section-eyebrow">✈ About</div>
         <h2 class="section-title">Hi, I'm Julia.<br>We live in the world.</h2>
-        <p>I'm a nomadic mom of two, documenting life on the move — the beautiful, the chaotic, and the deeply real. We've navigated airports at 3am with a toddler, homeschooled in six countries, and learned that the best education doesn't fit inside four walls.</p>
-        <p>This space is where I share everything I wish someone had told me before our first trip. Honest tips. Free printables. No gatekeeping.</p>
-        <div class="about-tags">
+        <p class="about-text" style="font-family:'Lora',serif;color:var(--ink-light);line-height:1.85;margin-bottom:1rem;">I'm a nomadic mom of two, documenting life on the move — the beautiful, the chaotic, and the deeply real. We've navigated airports at 3am with a toddler, homeschooled in six countries, and learned that the best education doesn't fit inside four walls.</p>
+        <p style="font-family:'Lora',serif;color:var(--ink-light);line-height:1.85;">This space is where I share everything I wish someone had told me before our first trip. Honest tips. Free printables. No gatekeeping.</p>
+        <div class="about-tags" style="margin-top:1.5rem;">
           <span class="tag">✈ Travel Safety</span>
           <span class="tag">📚 Homeschooling</span>
-          <span class="tag">🌍 Nomadic Family Life</span>
+          <span class="tag">🌍 Nomadic Life</span>
           <span class="tag">📋 Free Printables</span>
         </div>
       </div>
@@ -854,224 +284,190 @@
   </div>
 </section>
 
-<!-- ── PRINTABLES ── -->
+<!-- PRINTABLES -->
 <section id="printables">
   <div class="section-inner">
-    <div class="printables-header">
+    <div class="printables-top reveal">
       <div>
-        <div class="section-label">Free Resources</div>
+        <div class="section-eyebrow">📋 Free Resources</div>
         <h2 class="section-title">Printables for<br>traveling families</h2>
       </div>
-      <p class="section-subtitle" style="max-width:300px; font-family:'Lora',serif; color:var(--ink-light); font-size:0.95rem;">All free. Always. Just sign up with your email and they land in your inbox.</p>
+      <p class="section-sub" style="max-width:280px;font-size:.92rem;">All free. Enter your email and they land in your inbox instantly.</p>
     </div>
     <div class="printables-grid">
-      <!-- Card 1 -->
-      <div class="printable-card" onclick="document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">
-        <div class="printable-preview">
-          <span class="preview-plane">✈</span>
-          <span class="preview-plane">✈</span>
-          <div class="printable-preview-inner">
-            <div class="preview-line dark"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line short"></div>
-            <div class="preview-line dark"></div>
-            <div class="preview-line short"></div>
-            <div class="preview-line"></div>
-            <div class="preview-line dark"></div>
+      <div class="printable-card reveal" onclick="document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">
+        <div class="printable-thumb">
+          <div class="thumb-card">
+            <div class="tline dark"></div><div class="tline"></div><div class="tline short"></div>
+            <div class="tline dark"></div><div class="tline short"></div><div class="tline"></div><div class="tline dark"></div>
           </div>
         </div>
         <div class="printable-info">
-          <span class="printable-badge new">New · Free</span>
-          <div class="printable-title">Child Travel Safety Card + Checklist</div>
-          <div class="printable-desc">Cut-out ID card your child keeps in their pocket. AirTag tips, airport safety rules & a full pre-flight checklist. EN + HU.</div>
-          <a href="#newsletter" class="printable-cta" onclick="event.stopPropagation()">Get it free →</a>
+          <span class="p-badge new">New · Free · EN + HU</span>
+          <h3>Child Travel Safety Card + Checklist</h3>
+          <p>Cut-out ID card your child keeps in their pocket. AirTag tips, airport rules & full pre-flight checklist.</p>
+          <a href="#newsletter" class="p-cta" onclick="event.stopPropagation()">Get it free →</a>
         </div>
       </div>
-      <!-- Card 2 placeholder -->
-      <div class="printable-card" style="opacity:0.6; pointer-events:none;">
-        <div class="printable-preview" style="background:linear-gradient(135deg,#c5d8b0,#7a8c6e);">
-          <span class="preview-plane">📚</span>
-          <div class="printable-preview-inner"></div>
+      <div class="printable-card reveal" style="opacity:.55;pointer-events:none;">
+        <div class="printable-thumb" style="background:linear-gradient(135deg,#6dbf9e,#3a8c6e);">
+          <div class="thumb-card"></div>
         </div>
         <div class="printable-info">
-          <span class="printable-badge" style="background:var(--sand-deeper); color:var(--ink);">Coming soon</span>
-          <div class="printable-title">Nomadic Homeschool Planner</div>
-          <div class="printable-desc">Weekly learning log, subject tracker & resource list for families learning on the road.</div>
-          <span class="printable-cta" style="color:var(--sand-deeper);">Coming soon</span>
+          <span class="p-badge">Coming soon</span>
+          <h3>Nomadic Homeschool Planner</h3>
+          <p>Weekly learning log & subject tracker for families learning on the road.</p>
         </div>
       </div>
-      <!-- Card 3 placeholder -->
-      <div class="printable-card" style="opacity:0.6; pointer-events:none;">
-        <div class="printable-preview" style="background:linear-gradient(135deg,#b0c8d8,#5a7f96);">
-          <span class="preview-plane">🏥</span>
-          <div class="printable-preview-inner"></div>
+      <div class="printable-card reveal" style="opacity:.55;pointer-events:none;">
+        <div class="printable-thumb" style="background:linear-gradient(135deg,#80c9c0,#2a8a80);">
+          <div class="thumb-card"></div>
         </div>
         <div class="printable-info">
-          <span class="printable-badge" style="background:var(--sand-deeper); color:var(--ink);">Coming soon</span>
-          <div class="printable-title">Family Health Travel Kit List</div>
-          <div class="printable-desc">What to pack in your travel medical kit — for babies, toddlers & school-age kids.</div>
-          <span class="printable-cta" style="color:var(--sand-deeper);">Coming soon</span>
+          <span class="p-badge">Coming soon</span>
+          <h3>Family Health Travel Kit List</h3>
+          <p>What to pack in your medical kit — for babies, toddlers & school-age kids.</p>
         </div>
       </div>
     </div>
-
-    <div class="freebie-banner">
+    <div class="freebie-strip reveal">
       <div>
         <h3>Ready to travel with peace of mind?</h3>
-        <p>Join families already travelling smarter. Get the safety printable free — straight to your inbox.</p>
+        <p>Join families already travelling smarter — get the safety printable free. 🌍</p>
       </div>
-      <a href="#newsletter" class="btn-light">Get it free →</a>
+      <a href="#newsletter" class="btn-white">Get it free →</a>
     </div>
   </div>
 </section>
 
-<!-- ── BLOG ── -->
+<!-- BLOG -->
 <section id="blog">
   <div class="section-inner">
-    <div class="section-label">From the journal</div>
-    <h2 class="section-title">Stories from the road</h2>
-    <p class="section-subtitle" style="margin-bottom:0">Real experiences, honest advice & nomadic family life — unfiltered.</p>
-
-    <div class="blog-book-container">
+    <div class="reveal">
+      <div class="section-eyebrow">📖 From the journal</div>
+      <h2 class="section-title">Stories from the road</h2>
+      <p class="section-sub">Real experiences, honest advice & nomadic family life — unfiltered.</p>
+    </div>
+    <div class="blog-book-wrap reveal">
       <div class="blog-book">
-        <div class="blog-pages-wrapper">
-          <div class="blog-pages" id="blogPages">
-
-            <!-- Page 1 -->
-            <div class="blog-page">
-              <div class="blog-article">
-                <div class="article-tag">Travel Safety</div>
-                <div class="article-date">March 12, 2025</div>
-                <div class="article-title">What I put in my child's pocket before every single flight</div>
-                <div class="article-excerpt">After the third time our daughter wandered toward a gate that wasn't ours, I stopped trusting airport crowds and started trusting systems. Here's the exact card she carries now — and why it changed everything for us...</div>
-                <a href="#" class="article-read">Read more →</a>
-                <div class="article-divider"></div>
-                <div class="article-tag">Airport Tips</div>
-                <div class="article-date">February 28, 2025</div>
-                <div class="article-title">AirTags for kids: where to put it, and what nobody tells you</div>
-                <div class="article-excerpt">Everyone says "put an AirTag in the bag!" — but bags get put in overhead lockers, checked in, or left at security. Here's where we actually put ours...</div>
-                <a href="#" class="article-read">Read more →</a>
+        <div class="book-pages-wrap">
+          <div class="book-pages" id="bookPages">
+            <div class="book-page">
+              <div>
+                <span class="b-tag">Travel Safety</span>
+                <div class="b-date">March 12, 2025</div>
+                <div class="b-title">What I put in my child's pocket before every single flight</div>
+                <div class="b-excerpt">After the third time our daughter wandered toward a gate that wasn't ours, I stopped trusting airport crowds and started trusting systems. Here's the exact card she carries now...</div>
+                <a href="#" class="b-read">Read more →</a>
+                <div class="b-divider"></div>
+                <span class="b-tag">Airport Tips</span>
+                <div class="b-date">February 28, 2025</div>
+                <div class="b-title">AirTags for kids: where to put it, and what nobody tells you</div>
+                <div class="b-excerpt">Everyone says "put an AirTag in the bag!" — but bags get put in overhead lockers or left at security. Here's where we actually put ours...</div>
+                <a href="#" class="b-read">Read more →</a>
               </div>
-              <div class="blog-article">
-                <div class="article-tag">Nomadic Life</div>
-                <div class="article-date">February 14, 2025</div>
-                <div class="article-title">The question I'm asked most at airports: "Aren't you scared?"</div>
-                <div class="article-excerpt">Yes and no. Scared of what, exactly? I'm far more afraid of my kids growing up thinking the world is dangerous than of actually being in it. Here's what changed my perspective completely...</div>
-                <a href="#" class="article-read">Read more →</a>
-                <div class="article-divider"></div>
-                <div class="article-tag">Packing</div>
-                <div class="article-date">January 30, 2025</div>
-                <div class="article-title">Our entire family's packing list — for a 3-month trip, carry-on only</div>
-                <div class="article-excerpt">Two adults, two kids, zero checked bags. People don't believe us until we show them the photos. The secret isn't packing light — it's knowing exactly what you actually use...</div>
-                <a href="#" class="article-read">Read more →</a>
+              <div>
+                <span class="b-tag">Nomadic Life</span>
+                <div class="b-date">February 14, 2025</div>
+                <div class="b-title">The question I'm asked most at airports: "Aren't you scared?"</div>
+                <div class="b-excerpt">Yes and no. I'm far more afraid of my kids growing up thinking the world is dangerous than of actually being in it. Here's what changed my perspective...</div>
+                <a href="#" class="b-read">Read more →</a>
+                <div class="b-divider"></div>
+                <span class="b-tag">Packing</span>
+                <div class="b-date">January 30, 2025</div>
+                <div class="b-title">Our entire family's packing list — for a 3-month trip, carry-on only</div>
+                <div class="b-excerpt">Two adults, two kids, zero checked bags. The secret isn't packing light — it's knowing exactly what you actually use...</div>
+                <a href="#" class="b-read">Read more →</a>
               </div>
-              <div class="blog-page-number left">— 1 —</div>
-              <div class="blog-page-number right">— 2 —</div>
             </div>
-
-            <!-- Page 2 -->
-            <div class="blog-page">
-              <div class="blog-article">
-                <div class="article-tag">Homeschooling</div>
-                <div class="article-date">January 18, 2025</div>
-                <div class="article-title">We pulled our kids from school. Here's what happened next.</div>
-                <div class="article-excerpt">It wasn't a dramatic decision. It was a quiet Tuesday when I watched my son stress over a spelling test on words he'd never use again, and I thought: there has to be a better way. So we tried something different...</div>
-                <a href="#" class="article-read">Read more →</a>
-                <div class="article-divider"></div>
-                <div class="article-tag">Destinations</div>
-                <div class="article-date">January 5, 2025</div>
-                <div class="article-title">The 5 most family-friendly countries we've actually lived in</div>
-                <div class="article-excerpt">Not visited. Lived in — for at least 3 weeks each. These are our honest rankings based on safety, cost, kid-friendliness, and how easy it was to find a decent playground at 6pm...</div>
-                <a href="#" class="article-read">Read more →</a>
+            <div class="book-page">
+              <div>
+                <span class="b-tag">Homeschooling</span>
+                <div class="b-date">January 18, 2025</div>
+                <div class="b-title">We pulled our kids from school. Here's what happened next.</div>
+                <div class="b-excerpt">It wasn't dramatic. It was a quiet Tuesday when I watched my son stress over a spelling test on words he'd never use again, and I thought: there has to be a better way...</div>
+                <a href="#" class="b-read">Read more →</a>
+                <div class="b-divider"></div>
+                <span class="b-tag">Destinations</span>
+                <div class="b-date">January 5, 2025</div>
+                <div class="b-title">The 5 most family-friendly countries we've actually lived in</div>
+                <div class="b-excerpt">Not visited — lived in, for at least 3 weeks each. Our honest rankings based on safety, cost, and how easy it was to find a playground at 6pm...</div>
+                <a href="#" class="b-read">Read more →</a>
               </div>
-              <div class="blog-article">
-                <div class="article-tag">Health</div>
-                <div class="article-date">December 20, 2024</div>
-                <div class="article-title">What to do when your child gets sick abroad (and you don't speak the language)</div>
-                <div class="article-excerpt">It happened to us in a small town in Portugal. Our youngest had a 40°C fever at midnight. No English, no familiar pharmacy, no pediatrician. Here's exactly what we did — and what I keep in my bag at all times now...</div>
-                <a href="#" class="article-read">Read more →</a>
-                <div class="article-divider"></div>
-                <div class="article-tag">Money</div>
-                <div class="article-date">December 8, 2024</div>
-                <div class="article-title">How we afford to travel full-time with two kids (honest numbers)</div>
-                <div class="article-excerpt">People assume we're rich. We're not. We made very different choices. Here's a real breakdown of what a nomadic family month costs us, and where we spend and where we save...</div>
-                <a href="#" class="article-read">Read more →</a>
+              <div>
+                <span class="b-tag">Health</span>
+                <div class="b-date">December 20, 2024</div>
+                <div class="b-title">What to do when your child gets sick abroad (and you don't speak the language)</div>
+                <div class="b-excerpt">It happened in Portugal. Our youngest had a 40°C fever at midnight. No English, no familiar pharmacy. Here's exactly what we did...</div>
+                <a href="#" class="b-read">Read more →</a>
+                <div class="b-divider"></div>
+                <span class="b-tag">Money</span>
+                <div class="b-date">December 8, 2024</div>
+                <div class="b-title">How we afford to travel full-time with two kids (honest numbers)</div>
+                <div class="b-excerpt">People assume we're rich. We're not. We made very different choices. Here's a real breakdown of what a nomadic family month costs us...</div>
+                <a href="#" class="b-read">Read more →</a>
               </div>
-              <div class="blog-page-number left">— 3 —</div>
-              <div class="blog-page-number right">— 4 —</div>
             </div>
-
-          </div><!-- /blog-pages -->
-        </div><!-- /wrapper -->
-      </div><!-- /blog-book -->
-
-      <div class="blog-nav">
-        <button class="page-turn-btn" id="prevPage" onclick="turnPage(-1)" disabled>←</button>
-        <span class="page-indicator" id="pageIndicator">Page 1 of 2</span>
-        <button class="page-turn-btn" id="nextPage" onclick="turnPage(1)">→</button>
+          </div>
+        </div>
+      </div>
+      <div class="book-nav">
+        <button class="turn-btn" id="prevBtn" onclick="turnPage(-1)" disabled>←</button>
+        <span class="page-ind" id="pageInd">Page 1 of 2</span>
+        <button class="turn-btn" id="nextBtn" onclick="turnPage(1)">→</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── NEWSLETTER ── -->
+<!-- NEWSLETTER -->
 <section id="newsletter">
   <div class="section-inner">
-    <div class="newsletter-inner">
-      <div class="section-label" style="justify-content:center">Free printable</div>
-      <h2 class="section-title">Get the safety card<br>in your inbox</h2>
-      <p class="section-subtitle" style="margin:0 auto; text-align:center">Enter your email and I'll send the Child Travel Safety Card + full checklist — free, instantly, no spam.</p>
-      <div class="newsletter-card">
-        <!-- REPLACE THIS with your actual Kit.com embed code -->
-        <div class="kit-form-placeholder">
+    <div class="nl-inner">
+      <div class="reveal">
+        <div class="section-eyebrow" style="justify-content:center;display:inline-flex;">✂ Free printable</div>
+        <h2 class="section-title" style="text-align:center;">Get the safety card<br>in your inbox</h2>
+        <p class="section-sub" style="text-align:center;margin:0 auto;">Enter your email and I'll send the Child Travel Safety Card + full checklist — free, instantly, no spam.</p>
+      </div>
+      <div class="nl-card reveal">
+        <!-- REPLACE with your Kit.com embed code -->
+        <div class="kit-placeholder">
           📬 Your Kit.com signup form goes here.<br>
-          Paste your embed code to replace this placeholder.
+          Paste your embed code to replace this box.
         </div>
-        <!-- Kit.com embed example:
-        <script src="https://f.convertkit.com/xxxxxxxx/xxxxxxxx.js" data-uid="xxxxxxxx" async></script>
-        -->
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-logo">julia & the <span>wonderers</span></div>
-  <p style="font-size:0.85rem; font-family:'Lora',serif; font-style:italic; margin-bottom:0.5rem;">Nomadic family life — lived & shared openly</p>
+  <p style="font-family:'Lora',serif;font-style:italic;font-size:.9rem;margin-bottom:.3rem;">Nomadic family life — lived & shared openly ✈</p>
   <ul class="footer-links">
     <li><a href="#about">About</a></li>
     <li><a href="#printables">Printables</a></li>
     <li><a href="#blog">Blog</a></li>
     <li><a href="#newsletter">Newsletter</a></li>
-    <li><a href="https://tiktok.com" target="_blank">TikTok</a></li>
+    <li><a href="https://tiktok.com" target="_blank">TikTok ↗</a></li>
   </ul>
   <p class="footer-copy">© 2025 Julia & the Wonderers · Made with ♥ for nomadic families everywhere</p>
 </footer>
 
 <script>
-  // Mobile menu
-  function toggleMenu() {
-    document.getElementById('mobileMenu').classList.toggle('open');
-  }
-  document.addEventListener('click', function(e) {
-    const menu = document.getElementById('mobileMenu');
-    if (!menu.contains(e.target) && !e.target.closest('.hamburger')) {
-      menu.classList.remove('open');
-    }
-  });
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+document.addEventListener('click',e=>{const m=document.getElementById('mobileMenu');if(!m.contains(e.target)&&!e.target.closest('.hamburger'))m.classList.remove('open');});
 
-  // Blog page turner
-  let currentPage = 0;
-  const totalPages = 2;
+let cur=0,tot=2;
+function turnPage(d){
+  cur=Math.max(0,Math.min(tot-1,cur+d));
+  document.getElementById('bookPages').style.transform=`translateX(-${cur*100}%)`;
+  document.getElementById('prevBtn').disabled=cur===0;
+  document.getElementById('nextBtn').disabled=cur===tot-1;
+  document.getElementById('pageInd').textContent=`Page ${cur+1} of ${tot}`;
+}
 
-  function turnPage(dir) {
-    currentPage = Math.max(0, Math.min(totalPages - 1, currentPage + dir));
-    document.getElementById('blogPages').style.transform = `translateX(-${currentPage * 100}%)`;
-    document.getElementById('prevPage').disabled = currentPage === 0;
-    document.getElementById('nextPage').disabled = currentPage === totalPages - 1;
-    document.getElementById('pageIndicator').textContent = `Page ${currentPage + 1} of ${totalPages}`;
-  }
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
