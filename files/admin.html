@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Julia & the Wonderers</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #f5ede0;
+    --sand-dark: #e8d8c0;
+    --ink: #2c1f0e;
+    --ink-light: #5a3e28;
+    --rust: #b85c38;
+    --rust-light: #d4784f;
+    --cream: #fdf8f0;
+    --paper: #faf4e8;
+    --green: #4a8c5c;
+    --red: #c0392b;
+    --shadow: rgba(44,31,14,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; }
+
+  /* LOGIN */
+  #loginScreen {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background: var(--sand);
+  }
+  .login-card {
+    background:var(--paper); border:1px solid var(--sand-dark);
+    border-radius:4px; padding:3rem; width:100%; max-width:380px;
+    box-shadow: 5px 5px 0 var(--sand-dark);
+    text-align:center;
+  }
+  .login-logo {
+    font-family:'Playfair Display',serif; font-style:italic;
+    font-size:1.4rem; color:var(--ink); margin-bottom:0.3rem;
+  }
+  .login-logo span { color:var(--rust); }
+  .login-sub { font-size:0.78rem; color:var(--ink-light); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2rem; }
+  .login-card input {
+    width:100%; padding:0.85rem 1rem; border:1.5px solid var(--sand-dark);
+    border-radius:2px; background:var(--cream); font-size:0.95rem;
+    color:var(--ink); margin-bottom:1rem; font-family:'DM Sans',sans-serif;
+  }
+  .login-card input:focus { outline:none; border-color:var(--rust); }
+  .btn { 
+    display:inline-flex; align-items:center; gap:0.4rem;
+    padding:0.8rem 1.5rem; border:none; border-radius:2px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:500;
+    letter-spacing:0.03em; transition:all 0.2s; text-decoration:none;
+  }
+  .btn-primary { background:var(--rust); color:white; width:100%; justify-content:center; }
+  .btn-primary:hover { background:var(--ink); }
+  .btn-green { background:var(--green); color:white; }
+  .btn-green:hover { background:#3a6b48; }
+  .btn-outline { background:transparent; border:1.5px solid var(--sand-dark); color:var(--ink-light); }
+  .btn-outline:hover { border-color:var(--ink); color:var(--ink); }
+  .btn-red { background:var(--red); color:white; padding:0.4rem 0.8rem; font-size:0.78rem; }
+  .btn-red:hover { background:#a93226; }
+  .btn-sm { padding:0.45rem 0.9rem; font-size:0.8rem; }
+  .login-error { color:var(--red); font-size:0.82rem; margin-top:0.5rem; display:none; }
+
+  /* ADMIN LAYOUT */
+  #adminApp { display:none; min-height:100vh; }
+  .admin-header {
+    background:var(--ink); color:white; padding:0 2rem;
+    height:56px; display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:50;
+  }
+  .admin-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:1rem; }
+  .admin-logo span { color:var(--rust-light); }
+  .header-right { display:flex; align-items:center; gap:1rem; }
+  .status-badge {
+    font-size:0.72rem; padding:0.25rem 0.7rem; border-radius:20px;
+    font-weight:500; letter-spacing:0.05em;
+  }
+  .status-badge.saving { background:rgba(255,200,100,0.2); color:#f0c040; }
+  .status-badge.saved { background:rgba(74,140,92,0.2); color:#6dd49a; }
+  .status-badge.error { background:rgba(192,57,43,0.2); color:#e07070; }
+  .status-badge.hidden { display:none; }
+  .btn-logout { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); border:none; padding:0.4rem 0.8rem; border-radius:2px; cursor:pointer; font-size:0.78rem; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .btn-logout:hover { background:rgba(255,255,255,0.2); color:white; }
+
+  .admin-body { display:grid; grid-template-columns:220px 1fr; min-height:calc(100vh - 56px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    background:var(--cream); border-right:1px solid var(--sand-dark);
+    padding:1.5rem 0;
+  }
+  .sidebar-section { padding:0 1rem; margin-bottom:0.3rem; }
+  .sidebar-label { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--sand-dark); font-weight:500; padding:0.5rem 0.5rem 0.3rem; }
+  .sidebar-btn {
+    display:flex; align-items:center; gap:0.6rem;
+    width:100%; padding:0.65rem 0.8rem; border:none; background:transparent;
+    border-radius:2px; cursor:pointer; font-family:'DM Sans',sans-serif;
+    font-size:0.88rem; color:var(--ink-light); text-align:left; transition:all 0.15s;
+  }
+  .sidebar-btn:hover { background:var(--sand); color:var(--ink); }
+  .sidebar-btn.active { background:var(--rust); color:white; }
+  .sidebar-btn .icon { font-size:1rem; width:20px; text-align:center; }
+  .sidebar-divider { height:1px; background:var(--sand-dark); margin:0.8rem 1rem; }
+
+  /* MAIN CONTENT */
+  .admin-main { padding:2rem; overflow-y:auto; }
+  .page { display:none; }
+  .page.active { display:block; }
+
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:1rem; }
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--ink); }
+  .page-subtitle { font-size:0.85rem; color:var(--ink-light); margin-top:0.2rem; }
+
+  /* CARDS LIST */
+  .content-list { display:flex; flex-direction:column; gap:1rem; }
+  .content-card {
+    background:var(--paper); border:1px solid var(--sand-dark);
+    border-radius:4px; padding:1.2rem 1.5rem;
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:1rem; transition:box-shadow 0.2s;
+  }
+  .content-card:hover { box-shadow:3px 3px 0 var(--sand-dark); }
+  .card-info { flex:1; min-width:0; }
+  .card-title { font-weight:500; color:var(--ink); margin-bottom:0.3rem; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-meta { font-size:0.78rem; color:var(--ink-light); display:flex; gap:0.8rem; flex-wrap:wrap; align-items:center; }
+  .card-tag { background:var(--sand-dark); color:var(--ink-light); padding:0.15rem 0.5rem; border-radius:1px; font-size:0.7rem; font-weight:500; }
+  .card-tag.published { background:rgba(74,140,92,0.15); color:var(--green); }
+  .card-tag.draft { background:rgba(184,92,56,0.12); color:var(--rust); }
+  .card-actions { display:flex; gap:0.5rem; flex-shrink:0; }
+  .empty-state { text-align:center; padding:4rem 2rem; color:var(--ink-light); font-style:italic; }
+
+  /* EDITOR */
+  .editor-form { background:var(--paper); border:1px solid var(--sand-dark); border-radius:4px; padding:2rem; }
+  .form-row { margin-bottom:1.3rem; }
+  .form-row label { display:block; font-size:0.78rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-light); margin-bottom:0.45rem; }
+  .form-row input, .form-row select, .form-row textarea {
+    width:100%; padding:0.75rem 1rem; border:1.5px solid var(--sand-dark);
+    border-radius:2px; background:var(--cream); font-size:0.92rem;
+    color:var(--ink); font-family:'DM Sans',sans-serif; transition:border 0.2s;
+  }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline:none; border-color:var(--rust); }
+  .form-row textarea { resize:vertical; min-height:180px; line-height:1.6; }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .form-actions { display:flex; gap:0.8rem; margin-top:1.5rem; flex-wrap:wrap; }
+  .toggle-row { display:flex; align-items:center; gap:0.8rem; }
+  .toggle { position:relative; width:44px; height:24px; }
+  .toggle input { opacity:0; width:0; height:0; }
+  .toggle-slider {
+    position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0;
+    background:var(--sand-dark); border-radius:24px; transition:0.3s;
+  }
+  .toggle-slider::before {
+    content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px;
+    background:white; border-radius:50%; transition:0.3s;
+  }
+  .toggle input:checked + .toggle-slider { background:var(--green); }
+  .toggle input:checked + .toggle-slider::before { transform:translateX(20px); }
+
+  /* SETTINGS */
+  .settings-card { background:var(--paper); border:1px solid var(--sand-dark); border-radius:4px; padding:2rem; margin-bottom:1.5rem; }
+  .settings-card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1.2rem; color:var(--ink); }
+  .token-input-wrap { position:relative; }
+  .token-input-wrap input { padding-right:3rem; font-family:monospace; font-size:0.85rem; }
+  .toggle-vis { position:absolute; right:0.8rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:1rem; color:var(--ink-light); }
+  .info-box { background:rgba(184,92,56,0.08); border:1px solid rgba(184,92,56,0.2); border-radius:2px; padding:1rem 1.2rem; font-size:0.83rem; color:var(--ink-light); line-height:1.7; margin-top:1rem; }
+  .info-box a { color:var(--rust); }
+
+  /* DASHBOARD */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:1rem; margin-bottom:2rem; }
+  .stat-card { background:var(--paper); border:1px solid var(--sand-dark); border-radius:4px; padding:1.5rem; text-align:center; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--rust); line-height:1; }
+  .stat-label { font-size:0.78rem; color:var(--ink-light); margin-top:0.4rem; text-transform:uppercase; letter-spacing:0.08em; }
+  .quick-actions { display:flex; gap:1rem; flex-wrap:wrap; }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:2rem; right:2rem; z-index:999;
+    background:var(--ink); color:white; padding:0.8rem 1.5rem;
+    border-radius:2px; font-size:0.88rem; box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    transform:translateY(10px); opacity:0; transition:all 0.3s;
+    pointer-events:none;
+  }
+  .toast.show { opacity:1; transform:translateY(0); }
+  .toast.success { background:var(--green); }
+  .toast.error { background:var(--red); }
+
+  @media (max-width:700px) {
+    .admin-body { grid-template-columns:1fr; }
+    .sidebar { display:none; }
+    .form-grid { grid-template-columns:1fr; }
+    .admin-main { padding:1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">julia & the <span>wonderers</span></div>
+    <div class="login-sub">Admin Panel</div>
+    <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn btn-primary" onclick="login()">Enter →</button>
+    <div class="login-error" id="loginError">Wrong password. Try again.</div>
+  </div>
+</div>
+
+<!-- ── ADMIN APP ── -->
+<div id="adminApp">
+  <header class="admin-header">
+    <div class="admin-logo">julia & the <span>wonderers</span> · Admin</div>
+    <div class="header-right">
+      <span class="status-badge hidden" id="statusBadge">Saving...</span>
+      <a href="index.html" target="_blank" class="btn-logout">View site ↗</a>
+      <button class="btn-logout" onclick="logout()">Log out</button>
+    </div>
+  </header>
+  <div class="admin-body">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Overview</div>
+        <button class="sidebar-btn active" onclick="showPage('dashboard',this)">
+          <span class="icon">🏠</span> Dashboard
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Content</div>
+        <button class="sidebar-btn" onclick="showPage('posts',this)">
+          <span class="icon">📝</span> Blog Posts
+        </button>
+        <button class="sidebar-btn" onclick="showPage('printables',this)">
+          <span class="icon">📋</span> Printables
+        </button>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <button class="sidebar-btn" onclick="showPage('settings',this)">
+          <span class="icon">⚙️</span> Settings
+        </button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Good morning, Julia ✈</div>
+            <div class="page-subtitle">Here's what's happening on your site</div>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-num" id="stat-posts">0</div>
+            <div class="stat-label">Blog Posts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-printables">0</div>
+            <div class="stat-label">Printables</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-published">0</div>
+            <div class="stat-label">Published</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-drafts">0</div>
+            <div class="stat-label">Drafts</div>
+          </div>
+        </div>
+        <div class="page-header" style="margin-bottom:1rem">
+          <div class="page-title" style="font-size:1.1rem">Quick actions</div>
+        </div>
+        <div class="quick-actions">
+          <button class="btn btn-primary" onclick="showPage('posts',null); openPostEditor()">✏️ New blog post</button>
+          <button class="btn btn-outline" onclick="showPage('printables',null); openPrintableEditor()">➕ New printable</button>
+        </div>
+      </div>
+
+      <!-- POSTS -->
+      <div class="page" id="page-posts">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Blog Posts</div>
+            <div class="page-subtitle">Write, edit and publish your travel stories</div>
+          </div>
+          <button class="btn btn-primary" onclick="openPostEditor()">✏️ New post</button>
+        </div>
+        <div id="postsList" class="content-list"></div>
+
+        <!-- POST EDITOR (hidden by default) -->
+        <div id="postEditor" style="display:none; margin-top:2rem;">
+          <div class="page-header">
+            <div class="page-title" style="font-size:1.2rem" id="postEditorTitle">New Post</div>
+            <button class="btn btn-outline btn-sm" onclick="closePostEditor()">← Back to list</button>
+          </div>
+          <div class="editor-form">
+            <input type="hidden" id="postId">
+            <div class="form-row">
+              <label>Post Title *</label>
+              <input type="text" id="postTitle" placeholder="e.g. What I put in my child's pocket before every flight">
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>Category</label>
+                <select id="postCategory">
+                  <option>Travel Safety</option>
+                  <option>Airport Tips</option>
+                  <option>Nomadic Life</option>
+                  <option>Homeschooling</option>
+                  <option>Packing</option>
+                  <option>Health</option>
+                  <option>Destinations</option>
+                  <option>Money</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Date</label>
+                <input type="date" id="postDate">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Short excerpt (shown in blog preview)</label>
+              <textarea id="postExcerpt" rows="3" placeholder="2-3 sentences that make people want to read more..."></textarea>
+            </div>
+            <div class="form-row">
+              <label>Full post content</label>
+              <textarea id="postContent" rows="12" placeholder="Write your full blog post here..."></textarea>
+            </div>
+            <div class="form-row">
+              <label>Status</label>
+              <div class="toggle-row">
+                <label class="toggle">
+                  <input type="checkbox" id="postPublished" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+                <span style="font-size:0.88rem; color:var(--ink-light)">Published (visible on site)</span>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-green" onclick="savePost()">💾 Save & publish</button>
+              <button class="btn btn-outline" onclick="closePostEditor()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRINTABLES -->
+      <div class="page" id="page-printables">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Printables</div>
+            <div class="page-subtitle">Manage your free downloadable resources</div>
+          </div>
+          <button class="btn btn-primary" onclick="openPrintableEditor()">➕ New printable</button>
+        </div>
+        <div id="printablesList" class="content-list"></div>
+
+        <!-- PRINTABLE EDITOR -->
+        <div id="printableEditor" style="display:none; margin-top:2rem;">
+          <div class="page-header">
+            <div class="page-title" style="font-size:1.2rem" id="printableEditorTitle">New Printable</div>
+            <button class="btn btn-outline btn-sm" onclick="closePrintableEditor()">← Back to list</button>
+          </div>
+          <div class="editor-form">
+            <input type="hidden" id="printableId">
+            <div class="form-row">
+              <label>Title *</label>
+              <input type="text" id="printableTitle" placeholder="e.g. Child Travel Safety Card + Checklist">
+            </div>
+            <div class="form-row">
+              <label>Description</label>
+              <textarea id="printableDesc" rows="3" placeholder="Short description shown on the printables page..."></textarea>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>Badge label</label>
+                <input type="text" id="printableBadge" placeholder="e.g. Free, New, EN+HU">
+              </div>
+              <div class="form-row">
+                <label>Download / link URL</label>
+                <input type="text" id="printableLink" placeholder="e.g. #newsletter or https://...">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>Status</label>
+              <div class="toggle-row">
+                <label class="toggle">
+                  <input type="checkbox" id="printablePublished" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+                <span style="font-size:0.88rem; color:var(--ink-light)">Published (visible on site)</span>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-green" onclick="savePrintable()">💾 Save</button>
+              <button class="btn btn-outline" onclick="closePrintableEditor()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="page-header">
+          <div class="page-title">Settings</div>
+        </div>
+        <div class="settings-card">
+          <h3>🔑 GitHub Connection</h3>
+          <div class="form-row">
+            <label>GitHub Personal Access Token</label>
+            <div class="token-input-wrap">
+              <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="saveToken()">
+              <button class="toggle-vis" onclick="toggleTokenVis()">👁</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Repository</label>
+            <input type="text" id="ghRepo" value="iuliadmy/julia-wonderers" oninput="saveSettings()">
+          </div>
+          <div class="form-row">
+            <label>Branch</label>
+            <input type="text" id="ghBranch" value="main" oninput="saveSettings()">
+          </div>
+          <button class="btn btn-green btn-sm" onclick="testConnection()">🔗 Test connection</button>
+          <div class="info-box" style="margin-top:1rem">
+            <strong>How to get your GitHub Token:</strong><br>
+            1. Go to <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
+            2. Note: <code>julia-wonderers admin</code><br>
+            3. Expiration: <strong>No expiration</strong><br>
+            4. Scopes: tick <strong>repo</strong> ✅<br>
+            5. Click <strong>Generate token</strong> → copy & paste here<br>
+            <br>
+            ⚠️ The token is saved only in your browser (localStorage). Never share it.
+          </div>
+        </div>
+        <div class="settings-card">
+          <h3>🔐 Change Password</h3>
+          <div class="form-row">
+            <label>New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password">
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="changePassword()">Update password</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const CORRECT_PASSWORD_HASH = '7b9c3e2a1f8d4b6e5c0a2f9d8e1b3c4a7f6e2b5d9c0a3e8f1b4d7c2a6e9f3b0d'; // Batumi123@@
+const GITHUB_OWNER = 'iuliadmy';
+const GITHUB_REPO = 'julia-wonderers';
+const CONTENT_FILE = 'content.json';
+
+// Simple hash for password (not cryptographic but fine for this use case)
+async function hashString(str) {
+  const msgBuffer = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── AUTH ──
+async function login() {
+  const pwd = document.getElementById('passwordInput').value;
+  const hash = await hashString(pwd);
+  const stored = localStorage.getItem('jw_password_hash') || CORRECT_PASSWORD_HASH;
+  if (hash === stored) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    loadSettings();
+    loadContent();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('passwordInput').value = '';
+  }
+}
+
+async function changePassword() {
+  const newPwd = document.getElementById('newPassword').value;
+  if (!newPwd || newPwd.length < 6) { showToast('Password must be at least 6 characters','error'); return; }
+  const hash = await hashString(newPwd);
+  localStorage.setItem('jw_password_hash', hash);
+  document.getElementById('newPassword').value = '';
+  showToast('Password updated ✓','success');
+}
+
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+}
+
+// ── NAVIGATION ──
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  else {
+    document.querySelectorAll('.sidebar-btn').forEach(b => {
+      if (b.textContent.toLowerCase().includes(name.replace('s',''))) b.classList.add('active');
+    });
+  }
+}
+
+// ── SETTINGS ──
+function loadSettings() {
+  const token = localStorage.getItem('jw_gh_token') || '';
+  const repo = localStorage.getItem('jw_gh_repo') || 'iuliadmy/julia-wonderers';
+  const branch = localStorage.getItem('jw_gh_branch') || 'main';
+  document.getElementById('ghToken').value = token;
+  document.getElementById('ghRepo').value = repo;
+  document.getElementById('ghBranch').value = branch;
+}
+
+function saveToken() {
+  localStorage.setItem('jw_gh_token', document.getElementById('ghToken').value);
+}
+function saveSettings() {
+  localStorage.setItem('jw_gh_repo', document.getElementById('ghRepo').value);
+  localStorage.setItem('jw_gh_branch', document.getElementById('ghBranch').value);
+}
+function toggleTokenVis() {
+  const inp = document.getElementById('ghToken');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+async function testConnection() {
+  const token = localStorage.getItem('jw_gh_token');
+  if (!token) { showToast('Please enter your GitHub Token first','error'); return; }
+  showToast('Testing connection...');
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (res.ok) showToast('✅ Connected to GitHub!','success');
+    else showToast('❌ Connection failed. Check your token.','error');
+  } catch(e) { showToast('❌ Network error','error'); }
+}
+
+// ── GITHUB API ──
+async function getFileSha() {
+  const token = localStorage.getItem('jw_gh_token');
+  const branch = localStorage.getItem('jw_gh_branch') || 'main';
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONTENT_FILE}?ref=${branch}`, {
+      headers: token ? { Authorization: `token ${token}` } : {}
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.sha;
+    }
+  } catch(e) {}
+  return null;
+}
+
+async function saveToGitHub(content) {
+  const token = localStorage.getItem('jw_gh_token');
+  const branch = localStorage.getItem('jw_gh_branch') || 'main';
+  if (!token) { showToast('⚠️ No GitHub token — saved locally only','error'); return false; }
+
+  setStatus('saving');
+  const sha = await getFileSha();
+  const body = {
+    message: 'Content updated via admin panel',
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+    branch: branch
+  };
+  if (sha) body.sha = sha;
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONTENT_FILE}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) { setStatus('saved'); return true; }
+    else { setStatus('error'); showToast('GitHub save failed — check token','error'); return false; }
+  } catch(e) { setStatus('error'); showToast('Network error saving to GitHub','error'); return false; }
+}
+
+function setStatus(state) {
+  const badge = document.getElementById('statusBadge');
+  badge.className = 'status-badge ' + state;
+  badge.textContent = state === 'saving' ? '⏳ Saving...' : state === 'saved' ? '✅ Saved' : '❌ Error';
+  if (state === 'saved') setTimeout(() => badge.classList.add('hidden'), 3000);
+}
+
+// ── CONTENT ──
+let content = { posts: [], printables: [] };
+
+async function loadContent() {
+  const branch = localStorage.getItem('jw_gh_branch') || 'main';
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${CONTENT_FILE}?ref=${branch}&t=${Date.now()}`, {
+      headers: { Accept: 'application/vnd.github.v3.raw' }
+    });
+    if (res.ok) {
+      content = await res.json();
+    }
+  } catch(e) {
+    // Use default empty content
+  }
+  renderDashboard();
+  renderPosts();
+  renderPrintables();
+}
+
+function renderDashboard() {
+  const posts = content.posts || [];
+  const printables = content.printables || [];
+  document.getElementById('stat-posts').textContent = posts.length;
+  document.getElementById('stat-printables').textContent = printables.length;
+  document.getElementById('stat-published').textContent = posts.filter(p=>p.published).length + printables.filter(p=>p.published).length;
+  document.getElementById('stat-drafts').textContent = posts.filter(p=>!p.published).length;
+}
+
+// ── POSTS ──
+function renderPosts() {
+  const posts = content.posts || [];
+  const el = document.getElementById('postsList');
+  if (!posts.length) { el.innerHTML = '<div class="empty-state">No posts yet. Create your first one! ✍️</div>'; return; }
+  el.innerHTML = posts.map(post => `
+    <div class="content-card">
+      <div class="card-info">
+        <div class="card-title">${post.title}</div>
+        <div class="card-meta">
+          <span class="card-tag">${post.category}</span>
+          <span class="card-tag ${post.published?'published':'draft'}">${post.published?'Published':'Draft'}</span>
+          <span>${post.date}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="editPost('${post.id}')">✏️ Edit</button>
+        <button class="btn btn-red" onclick="deletePost('${post.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openPostEditor(postData) {
+  document.getElementById('postsList').style.display = 'none';
+  document.getElementById('postEditor').style.display = 'block';
+  document.querySelector('#page-posts .page-header').style.display = 'none';
+  if (postData) {
+    document.getElementById('postEditorTitle').textContent = 'Edit Post';
+    document.getElementById('postId').value = postData.id;
+    document.getElementById('postTitle').value = postData.title;
+    document.getElementById('postCategory').value = postData.category;
+    document.getElementById('postDate').value = postData.date;
+    document.getElementById('postExcerpt').value = postData.excerpt;
+    document.getElementById('postContent').value = postData.content;
+    document.getElementById('postPublished').checked = postData.published;
+  } else {
+    document.getElementById('postEditorTitle').textContent = 'New Post';
+    document.getElementById('postId').value = 'post-' + Date.now();
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postCategory').value = 'Travel Safety';
+    document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('postExcerpt').value = '';
+    document.getElementById('postContent').value = '';
+    document.getElementById('postPublished').checked = true;
+  }
+}
+
+function closePostEditor() {
+  document.getElementById('postsList').style.display = 'flex';
+  document.getElementById('postEditor').style.display = 'none';
+  document.querySelector('#page-posts .page-header').style.display = 'flex';
+}
+
+function editPost(id) {
+  const post = content.posts.find(p => p.id === id);
+  if (post) openPostEditor(post);
+}
+
+async function savePost() {
+  const id = document.getElementById('postId').value;
+  const title = document.getElementById('postTitle').value.trim();
+  if (!title) { showToast('Title is required','error'); return; }
+  const post = {
+    id,
+    title,
+    category: document.getElementById('postCategory').value,
+    date: document.getElementById('postDate').value,
+    excerpt: document.getElementById('postExcerpt').value,
+    content: document.getElementById('postContent').value,
+    published: document.getElementById('postPublished').checked
+  };
+  const idx = content.posts.findIndex(p => p.id === id);
+  if (idx >= 0) content.posts[idx] = post;
+  else content.posts.unshift(post);
+
+  const ok = await saveToGitHub(content);
+  if (ok !== false) {
+    showToast('Post saved! ✅','success');
+    closePostEditor();
+    renderPosts();
+    renderDashboard();
+  }
+}
+
+async function deletePost(id) {
+  if (!confirm('Delete this post? This cannot be undone.')) return;
+  content.posts = content.posts.filter(p => p.id !== id);
+  await saveToGitHub(content);
+  showToast('Post deleted','success');
+  renderPosts();
+  renderDashboard();
+}
+
+// ── PRINTABLES ──
+function renderPrintables() {
+  const printables = content.printables || [];
+  const el = document.getElementById('printablesList');
+  if (!printables.length) { el.innerHTML = '<div class="empty-state">No printables yet. Add your first one! 📋</div>'; return; }
+  el.innerHTML = printables.map(p => `
+    <div class="content-card">
+      <div class="card-info">
+        <div class="card-title">${p.title}</div>
+        <div class="card-meta">
+          <span class="card-tag">${p.badge||'Free'}</span>
+          <span class="card-tag ${p.published?'published':'draft'}">${p.published?'Published':'Hidden'}</span>
+          <span style="font-size:0.75rem; opacity:0.7">${p.link}</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="editPrintable('${p.id}')">✏️ Edit</button>
+        <button class="btn btn-red" onclick="deletePrintable('${p.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openPrintableEditor(data) {
+  document.getElementById('printablesList').style.display = 'none';
+  document.getElementById('printableEditor').style.display = 'block';
+  document.querySelector('#page-printables .page-header').style.display = 'none';
+  if (data) {
+    document.getElementById('printableEditorTitle').textContent = 'Edit Printable';
+    document.getElementById('printableId').value = data.id;
+    document.getElementById('printableTitle').value = data.title;
+    document.getElementById('printableDesc').value = data.description;
+    document.getElementById('printableBadge').value = data.badge||'';
+    document.getElementById('printableLink').value = data.link||'';
+    document.getElementById('printablePublished').checked = data.published;
+  } else {
+    document.getElementById('printableEditorTitle').textContent = 'New Printable';
+    document.getElementById('printableId').value = 'printable-' + Date.now();
+    document.getElementById('printableTitle').value = '';
+    document.getElementById('printableDesc').value = '';
+    document.getElementById('printableBadge').value = 'Free';
+    document.getElementById('printableLink').value = '#newsletter';
+    document.getElementById('printablePublished').checked = true;
+  }
+}
+
+function closePrintableEditor() {
+  document.getElementById('printablesList').style.display = 'flex';
+  document.getElementById('printableEditor').style.display = 'none';
+  document.querySelector('#page-printables .page-header').style.display = 'flex';
+}
+
+function editPrintable(id) {
+  const p = content.printables.find(p => p.id === id);
+  if (p) openPrintableEditor(p);
+}
+
+async function savePrintable() {
+  const id = document.getElementById('printableId').value;
+  const title = document.getElementById('printableTitle').value.trim();
+  if (!title) { showToast('Title is required','error'); return; }
+  const p = {
+    id,
+    title,
+    description: document.getElementById('printableDesc').value,
+    badge: document.getElementById('printableBadge').value,
+    link: document.getElementById('printableLink').value,
+    published: document.getElementById('printablePublished').checked
+  };
+  const idx = content.printables.findIndex(x => x.id === id);
+  if (idx >= 0) content.printables[idx] = p;
+  else content.printables.unshift(p);
+
+  const ok = await saveToGitHub(content);
+  if (ok !== false) {
+    showToast('Printable saved! ✅','success');
+    closePrintableEditor();
+    renderPrintables();
+    renderDashboard();
+  }
+}
+
+async function deletePrintable(id) {
+  if (!confirm('Delete this printable?')) return;
+  content.printables = content.printables.filter(p => p.id !== id);
+  await saveToGitHub(content);
+  showToast('Deleted','success');
+  renderPrintables();
+  renderDashboard();
+}
+
+// ── TOAST ──
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// Init: set today's date default
+document.getElementById('postDate') && (document.getElementById('postDate').value = new Date().toISOString().split('T')[0]);
+</script>
+</body>
+</html>

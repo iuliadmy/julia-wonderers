@@ -1,0 +1,32 @@
+{
+  "posts": [
+    {
+      "id": "post-1",
+      "title": "What I put in my child's pocket before every single flight",
+      "category": "Travel Safety",
+      "date": "2025-03-12",
+      "excerpt": "After the third time our daughter wandered toward a gate that wasn't ours, I stopped trusting airport crowds and started trusting systems. Here's the exact card she carries now...",
+      "content": "Full post content goes here...",
+      "published": true
+    },
+    {
+      "id": "post-2",
+      "title": "AirTags for kids: where to put it, and what nobody tells you",
+      "category": "Airport Tips",
+      "date": "2025-02-28",
+      "excerpt": "Everyone says put an AirTag in the bag — but bags get put in overhead lockers, checked in, or left at security. Here's where we actually put ours...",
+      "content": "Full post content goes here...",
+      "published": true
+    }
+  ],
+  "printables": [
+    {
+      "id": "printable-1",
+      "title": "Child Travel Safety Card + Checklist",
+      "description": "Cut-out ID card your child keeps in their pocket. AirTag tips, airport safety rules & a full pre-flight checklist. EN + HU.",
+      "badge": "Free",
+      "link": "#newsletter",
+      "published": true
+    }
+  ]
+}
